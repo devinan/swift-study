@@ -182,3 +182,126 @@ serverResponseCode = nil
 /* optional 변수에 기본갑을 제공하지 않고 생성한다면 그 변수는 자동적으로 nil을 초기화한다. */
 var surveyAnswer: String?
 // surveyAnswer is automatically set to nil
+
+// - # If Statements and Forced Unwrapping # -
+
+if convertedNumber != nil {
+    print("convertedNumber contains some integer value.")
+}
+// Prints "convertedNumber contains some integer value."
+
+if convertedNumber != nil {
+    print("convertedNumber has an integer value of \(convertedNumber!).")
+}
+// Prints "convertedNumber has an integer value of 123."
+/*
+ ! 표현은 optional의 값이 nil이 아닌 확실한 값이 있다는 것을 알기 때문에 강제 해체합니다.
+ 하지만 optional의 값이 nil이면 runtime error를 일으킵니다.
+ */
+
+// - Optional Binding -
+/*
+ Optional Binding은 if 또는 While 문으로 Optional의 값이 nil이 아닌지 여부를 확인하고 블록 내부의 문에서 해당 값을 상수 혹은 변수로 추출하여 사용합니다.
+ if let constantName = someOptional {
+    statements
+ }
+ */
+
+if let actualNumber = Int(possibleNumber) {
+    print("The string \"\(possibleNumber)\" has an integer value of \(actualNumber)")
+} else {
+    print("The string \"\(possibleNumber)\" could not be converted to an integer")
+}
+
+if let firstNumber = Int("4"), let secondNumber = Int("42"),
+   firstNumber < secondNumber && secondNumber < 100 {
+    print("\(firstNumber) < \(secondNumber) < 100")
+}
+// Prints "4 < 42 < 100"
+
+if let firstNumber = Int("4") {
+    if let secondNumber = Int("42") {
+        if firstNumber < secondNumber && secondNumber < 100 {
+            print("\(firstNumber) < \(secondNumber) < 100")
+        }
+    }
+}
+/*
+ !) Optional Binding에 생성된 변수와 상수는 if 본문에서만 사용이 가능하다.
+ 반면 guard에서 생성한 것은 guard문 뒤에서도 사용가능하다.
+ */
+
+// - Implictly Unwrapped Optionals -
+/*
+ Optional의 값이 항상 가지고 있으면 매번 optional의 값을 체크하고 해체하는 경우가 필요하지 않습니다.
+ Optional의 타입뒤에 !을 붙이면 됩니다.
+ Implictly Unwrapped Optionals는 Optional이 아닌 경우에도 사용할 수 있습니다.
+ 왜냐하면 매번 값을 해체할 필요가 없기 때문입니다.
+ */
+let possibleString: String? = "An optional string"
+let forcedString = possibleString!
+// requires an exclamation point
+
+let assumedString: String! = "An implicitly unwrapped optional string."
+let implictString: String = assumedString
+// no need for an exclamation point
+/*
+implicitly unwrapped optional의 값을 사용할때 처음 기존의 optional의 값으로 설정 된다. 하지만 optional 값으로 사용할수 없을때 강제해체가 되어진다.
+ 위의 예제에서는 implictString이 분명한 optional이 아닌 String이기 때문에 implictString에게 값을 할당하기 전에 assumedString이 강제 해체되어진다.
+ 아래의 예제에서는 optionalString이 분명한 타입이 아닌 경우이므로 기존의 optional이 된다.
+ */
+let optionalString = assumedString
+// The type of optionalString is "String?" and assumedString isn't force-unwrapped.
+/*
+ Implicitly unwrapped optional 이 nil이고 그 값을 접근을 한다면 runtime error 가 일으킨다.
+ 이 결과는 정상적인 optional이 값이 없을때와 같다.
+ */
+if assumedString != nil {
+    print(assumedString!)
+}
+// Prints "An implicitly unwrapped optional string."
+/*
+ Optional Binding을 이용할수 있다.
+ */
+if let definiteString = assumedString {
+    print(definiteString)
+}
+// Prints "An implicitly unwrapped optional string."
+/*
+ optional이 nil이 될 가능성이 있으면 항상 평범한 Optional을 사용해라. Implicitly unwrapped optional (X)
+ */
+
+
+// - # Error Handling # -
+func canThrowAnError() throws {
+// this function may or may not throw an error
+}
+/*
+ error를 던질수 있는 함수는 throws 키워드를 사용한다.
+ error를 던지는 함수를 호출할때 미리 try 키워드를 사용해야합니다.
+ Swift는 자동적으로 에러가 Catch 문에 처리되기 전까지 현재 스코프 밖으로 벗어납니다.
+*/
+do {
+    try canThrowAnError()
+    // no error was thrown
+} catch {
+   // an error was thrown
+}
+
+/*
+ 다른 error의 조건에 반응할수 있도록 사용할수 있는 error handling의 예제입니다.
+ */
+func makeASandwich() throws {
+    // ...
+}
+/*
+do {
+    try makeASandwich()
+    eatASandwich()
+} catch SandwichError.outOfCleanDishes {
+    washDishes()
+} catch SandwichError.missingIngredients(let ingredients) {
+    buyGroceries(ingredients)
+}
+*/
+
